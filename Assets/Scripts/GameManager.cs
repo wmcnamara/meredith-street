@@ -17,8 +17,35 @@ public class GameManager : MonoBehaviour
         public float timeInSeconds;
     }
 
-    private static TextMeshProUGUI globalText = null;
-    private static Queue<ScreenMessage> messageQueue = new Queue<ScreenMessage>();
+    private TextMeshProUGUI globalText = null;
+    private Queue<ScreenMessage> messageQueue = new Queue<ScreenMessage>();
+
+    private static GameManager instance = null;
+
+    public static GameManager Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                instance = FindObjectOfType<GameManager>();
+
+                //If the manager doesnt already exist, spawn it
+                if (instance == null)
+                {
+                    GameObject obj = new GameObject("Candy Counter");
+                    GameManager candy = obj.AddComponent<GameManager>();
+                    instance = candy;
+
+                    return instance;
+                }
+
+                return instance;
+            }
+
+            return instance;
+        }
+    }
 
     void Start()
     {
@@ -53,13 +80,21 @@ public class GameManager : MonoBehaviour
 
 
 
-    public static void AddToMessageQueue(ScreenMessage message)
+    public void AddToMessageQueue(ScreenMessage message)
     {
         messageQueue.Enqueue(message);
     }
 
-    public static void AddToMessageQueue(string message, float time)
+    public void AddToMessageQueue(string message, float time)
     {
         messageQueue.Enqueue(new ScreenMessage(message, time));
+    }
+
+    public void ClearMessageQueue()
+    {
+        StopAllCoroutines();
+        globalText.text = "";
+        previousMessageCompleted = true;
+        messageQueue.Clear();
     }
 }

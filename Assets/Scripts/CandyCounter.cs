@@ -6,12 +6,13 @@ using TMPro;
 
 public class CandyCounter : MonoBehaviour
 {
-    [SerializeField] UnityEvent OnPickupCandy;
-    [SerializeField] UnityEvent OnCompleteCandyGoal;
-    [SerializeField] TextMeshProUGUI candyText;
-
-    private const int RequiredCandy = 10;
-    private int currentCandy = RequiredCandy;
+    [SerializeField] private UnityEvent OnPickupCandy;
+    [SerializeField] private UnityEvent OnCompleteCandyGoal;
+    
+    private TextMeshProUGUI candyText;
+                      
+    private const int requiredCandy = 10;
+    private int currentCandy = requiredCandy;
 
 
     private static CandyCounter instance = null;
@@ -49,12 +50,12 @@ public class CandyCounter : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        GameManager.AddToMessageQueue("Collect 10 pieces of candy", 5.0f);
+        GameManager.Instance.AddToMessageQueue("Collect 10 pieces of candy", 5.0f);
 
         currentCandy = 0;
 
         candyText = GameObject.FindGameObjectWithTag("CandyCounterText").GetComponent<TextMeshProUGUI>();
-        candyText.text = CreateCandyText(currentCandy, RequiredCandy);
+        candyText.text = CreateCandyText(currentCandy, requiredCandy);
     }
 
     public void CollectCandy()
@@ -63,12 +64,15 @@ public class CandyCounter : MonoBehaviour
         OnPickupCandy.Invoke();
 
 
-        if (currentCandy >= RequiredCandy)
+        if (currentCandy >= requiredCandy)
         {
             OnCompleteCandyGoal.Invoke();
         }
 
-        candyText.text = CreateCandyText(currentCandy, RequiredCandy);
+        candyText.text = CreateCandyText(currentCandy, requiredCandy);
+
+        Debug.Log("Candy Collected");
+        Debug.Log($"Candy Left: {requiredCandy - currentCandy}");
     }
 
     private string CreateCandyText(int currentCandy, int maxCandy)
