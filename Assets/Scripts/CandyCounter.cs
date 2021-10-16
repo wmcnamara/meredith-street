@@ -2,11 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using TMPro;
 
 public class CandyCounter : MonoBehaviour
 {
     [SerializeField] UnityEvent OnPickupCandy;
     [SerializeField] UnityEvent OnCompleteCandyGoal;
+    [SerializeField] TextMeshProUGUI candyText;
 
     private const int RequiredCandy = 10;
     private int currentCandy = RequiredCandy;
@@ -49,9 +51,12 @@ public class CandyCounter : MonoBehaviour
     {
         GameManager.AddToMessageQueue("Collect 10 pieces of candy", 5.0f);
 
-        currentCandy = RequiredCandy;
+        currentCandy = 0;
+
+        candyText = GameObject.FindGameObjectWithTag("CandyCounterText").GetComponent<TextMeshProUGUI>();
+        candyText.text = CreateCandyText(currentCandy, RequiredCandy);
     }
-    
+
     public void CollectCandy()
     {
         currentCandy++;
@@ -62,5 +67,12 @@ public class CandyCounter : MonoBehaviour
         {
             OnCompleteCandyGoal.Invoke();
         }
+
+        candyText.text = CreateCandyText(currentCandy, RequiredCandy);
+    }
+
+    private string CreateCandyText(int currentCandy, int maxCandy)
+    {
+        return $"{currentCandy}/{maxCandy}";
     }
 }
