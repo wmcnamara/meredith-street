@@ -6,6 +6,7 @@ TagManager:
   tags:
   - GlobalText
   - CandyCounterText
+  - FootstepDatabase
   layers:
   - Default
   - TransparentFX
