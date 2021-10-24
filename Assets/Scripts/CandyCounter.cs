@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using TMPro;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class CandyCounter : MonoBehaviour
 {
     [SerializeField] private UnityEvent OnPickupCandy;
     [SerializeField] private UnityEvent OnCompleteCandyGoal;
-    
+
     private TextMeshProUGUI candyText;
                       
     private const int requiredCandy = 10;
@@ -67,6 +69,7 @@ public class CandyCounter : MonoBehaviour
         if (currentCandy >= requiredCandy)
         {
             OnCompleteCandyGoal.Invoke();
+            SceneManager.LoadScene("Transition");
         }
 
         candyText.text = CreateCandyText(currentCandy, requiredCandy);
@@ -74,9 +77,22 @@ public class CandyCounter : MonoBehaviour
         Debug.Log("Candy Collected");
         Debug.Log($"Candy Left: {requiredCandy - currentCandy}");
     }
+    public IEnumerator FadeScreenToBlack()
+    {
+        Image panel = GameObject.FindGameObjectWithTag("BackPanel").GetComponent<Image>();
+
+        for (float i = 0; i <= 1.0f; i += 1.0f * Time.deltaTime)
+        {
+            Color newCol = panel.color;
+            newCol.a = i;
+
+            panel.color = newCol;
+            yield return null;
+        }
+    }
 
     private string CreateCandyText(int currentCandy, int maxCandy)
     {
-        return $"{currentCandy}/{maxCandy}";
+        return $"Candy: {currentCandy}/{maxCandy}";
     }
 }

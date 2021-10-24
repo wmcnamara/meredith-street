@@ -33,6 +33,7 @@ public class Porch : MonoBehaviour
                 GameManager.Instance.ClearMessageQueue();
                 Destroy(this);
                 GetComponent<AudioSource>().Play();
+
                 return;
             }
 
